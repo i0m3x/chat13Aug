@@ -1490,25 +1490,27 @@ const yo = require('yo-yo')
 // document.body.appendChild(yo`<h1>This is a test!</h1>`)
 
 let listOfMessages = undefined
+let currentChannel = "home"
 
 function makeList(messages){
     return yo`<div id="list">
           <ul>
+          <li>The current channel is ${currentChannel}</li>
           ${messages.map(message => {
-              return yo`<li>${message.text}</li>`
+              return yo`<li>${message.username}:${message.text}</li>`
           })}
           </ul>
           </div>`
 }
 
-function postMessage (text) {
+function postMessage (text, channel, username) {
     console.log('posting message')
     fetch('/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ text: text, date: new Date() })
+      body: JSON.stringify({ username: username, channel: channel, text: text, date: new Date() })
     })
       .then(data => {
         console.log('Success:', data)
@@ -1526,7 +1528,14 @@ function getMessages () {
 
         displayMessages = []
         for(let i = 0; i < data.messages.length; i++){
-            displayMessages.push(JSON.parse(data.messages[i]))
+            let message = JSON.parse(data.messages[i])
+            if(message.channel === currentChannel){
+              displayMessages.push(message)
+
+            }
+        }
+        if(displayMessages.length === 0) {
+          alert(`no messages in ${currentChannel}, making a new channel... `)
         }
 
         listOfMessages = makeList(displayMessages)
@@ -1539,14 +1548,28 @@ function getMessages () {
         document.body.appendChild(listOfMessages)
 
         console.log(displayMessages)
+
+        //create function that shows chan
+
     })
 }
 getMessages()
-
+// setInterval(function(){ getMessages() }, 1000);
 
 sendMessage.addEventListener('click', function(event){
-    
-    postMessage(document.querySelector('#message').value)
+    postMessage(document.querySelector('#message').value, 
+    currentChannel,
+    document.querySelector('#username_box').value)
+    console.log(document.querySelector('#username_box').value)
   //  getMessages() async needed - it runs simulataneously -we need lag
 })
+
+sendChannel.addEventListener('click', function(event){
+    currentChannel = document.querySelector("#channel_box").value
+    getMessages()
+
+
+})
+
+
 },{"yo-yo":10}]},{},[12]);
