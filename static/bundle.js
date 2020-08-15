@@ -1487,7 +1487,7 @@ const yo = require('yo-yo')
 // fetch returns a "promise", which is a fancy object representing an asynchronous computation
 // We call ".then" and ".catch" on the promise object where we can register success and error callbacks respectively.
 
-document.body.appendChild(yo`<h1>This is a test!</h1>`)
+// document.body.appendChild(yo`<h1>This is a test!</h1>`)
 
 let listOfMessages = undefined
 
@@ -1512,6 +1512,7 @@ function postMessage (text) {
     })
       .then(data => {
         console.log('Success:', data)
+        getMessages()
       })
       .catch((error) => {
         console.error('Error:', error)
@@ -1540,10 +1541,12 @@ function getMessages () {
         console.log(displayMessages)
     })
 }
+getMessages()
+
 
 sendMessage.addEventListener('click', function(event){
-    postMessage(document.querySelector('#message').value)
     
-    getMessages()
+    postMessage(document.querySelector('#message').value)
+  //  getMessages() async needed - it runs simulataneously -we need lag
 })
 },{"yo-yo":10}]},{},[12]);
