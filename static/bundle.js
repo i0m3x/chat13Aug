@@ -1489,6 +1489,7 @@ const yo = require('yo-yo')
 
 // document.body.appendChild(yo`<h1>This is a test!</h1>`)
 
+let listOfRooms = undefined
 let listOfMessages = undefined
 let currentChannel = "home"
 
@@ -1502,6 +1503,22 @@ function makeList(messages){
           </ul>
           </div>`
 }
+
+function makeRooms(rooms){
+    return yo`<div id="room_box">
+              <select name="rooms" id="rooms">
+              ${rooms.map(room => {
+                return yo `<option value=${room}>
+                          ${room}
+                          </option>`
+              })}
+              </select>
+              <button id="select_room">Submit
+              </button>
+              </div>`
+
+
+  }
 
 function postMessage (text, channel, username) {
     console.log('posting message')
@@ -1527,19 +1544,32 @@ function getMessages () {
     .then(data => {
 
         displayMessages = []
+        let rooms = {}
         for(let i = 0; i < data.messages.length; i++){
+          
             let message = JSON.parse(data.messages[i])
-            if(message.channel === currentChannel){
+            rooms[message.channel] = true
+            // console.log(message)
+            // console.log(rooms)
+            if(message.channel === currentChannel && message.text != ""){
               displayMessages.push(message)
 
             }
         }
+        console.log(rooms)
         if(displayMessages.length === 0) {
           alert(`no messages in ${currentChannel}, making a new channel... `)
         }
-
+        listOfRooms = makeRooms(Object.keys(rooms))
         listOfMessages = makeList(displayMessages)
         
+        if(document.getElementById('room_box') != null){
+          document.body.removeChild(document.getElementById('room_box'))
+        }
+
+        yo.update(listOfRooms, makeRooms(Object.keys(rooms)))
+        document.body.appendChild(listOfRooms)
+
         if(document.getElementById('list') != null){
             document.body.removeChild(document.getElementById('list'))
         }
@@ -1566,10 +1596,14 @@ sendMessage.addEventListener('click', function(event){
 
 sendChannel.addEventListener('click', function(event){
     currentChannel = document.querySelector("#channel_box").value
+    postMessage("", currentChannel, "", "")
+    
+    
+  })
+  
+  select_room.addEventListener('click', function(event){
+    currentChannel = document.querySelector('#rooms').value
     getMessages()
-
-
+    
 })
-
-
 },{"yo-yo":10}]},{},[12]);
