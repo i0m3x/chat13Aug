@@ -16,6 +16,7 @@
     "watchify": "^3.11.1"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "http-hash-router": "^2.0.1",
     "st": "^2.0.0",
     "yo-yo": "^1.4.1"

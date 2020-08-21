@@ -1,1 +1,1 @@
-{"messages":["{\"username\":\"sam\",\"channel\":\"home\",\"text\":\"hi\",\"date\":\"2020-08-18T01:18:05.854Z\"}"]}
+{"messages":[{"username":"fred","channel":"home","text":"hi friends","date":"2020-08-21T03:28:11.225Z"},{"username":"greg","channel":"home","text":"hello fred","date":"2020-08-21T03:35:28.427Z"},{"username":"","channel":"javascript","text":"","date":"2020-08-21T03:36:56.326Z"}]}

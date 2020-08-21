@@ -1542,15 +1542,13 @@ function getMessages () {
     fetch('/messages')
     .then(response => response.json())
     .then(data => {
-
+      console.log(data)
         displayMessages = []
         let rooms = {}
         for(let i = 0; i < data.messages.length; i++){
-          
-            let message = JSON.parse(data.messages[i])
+            let message = data.messages[i]
             rooms[message.channel] = true
-            // console.log(message)
-            // console.log(rooms)
+
             if(message.channel === currentChannel && message.text != ""){
               displayMessages.push(message)
 
