@@ -1,10 +1,5 @@
 const yo = require('yo-yo')
-
-// to GET and POST messages, we use javascript's built-in function "fetch"
-// fetch returns a "promise", which is a fancy object representing an asynchronous computation
-// We call ".then" and ".catch" on the promise object where we can register success and error callbacks respectively.
-
-// document.body.appendChild(yo`<h1>This is a test!</h1>`)
+var socket = require('socket.io');
 
 let listOfRooms = undefined
 let listOfMessages = undefined
@@ -98,15 +93,21 @@ function getMessages () {
 
     })
 }
-getMessages()
-// setInterval(function(){ getMessages() }, 1000);
 
-sendMessage.addEventListener('click', function(event){
-    postMessage(document.querySelector('#message').value, 
-    currentChannel,
-    document.querySelector('#username_box').value)
-    console.log(document.querySelector('#username_box').value)
-  //  getMessages() async needed - it runs simulataneously -we need lag
+getMessages()
+
+sendMessage.addEventListener('click', () => {
+  socket.emit(
+    //name of the event being emitted to the backend socket
+    'chat message',
+    // content of the emit-ion
+    JSON.stringify({ 
+      username: document.querySelector('#username_box').value, 
+      channel: currentChannel,
+      text: document.querySelector('#message').value,
+      date: new Date()
+    })
+  )
 })
 
 sendChannel.addEventListener('click', function(event){
